@@ -1,0 +1,193 @@
+openapi: '3.0.2'
+info:
+  title: ZooAPI
+  description: "API de management de Zoos"
+  version: '1.0'
+servers:
+  - url: '{protocol}://{server}/v{version}'
+    variables:
+      protocol:
+        enum:
+          - http
+          - https
+        default: http
+      server:
+        default: localhost:8080
+      version:
+        default: '1'
+paths:
+  /login:
+    post:
+      tags:
+        - "Authentification"
+      summary: Authentifie l'utilisateur et retourne un token.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                zoo_id:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Authentification réussie
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        '401':
+          description: Authentification échoué
+  /createzoo:
+    post:
+      tags:
+        - 'Zoo Management'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                zoo_name:
+                  type: string
+                firstname:
+                  type: string
+                lastname:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '201':
+          description: Création du zoo réussi
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  zoo_id:
+                    type: string
+        '400':
+          description: Mauvaise requête
+  /users:
+    post:
+      tags:
+        - 'User Management'
+      summary: Créer un utilisateur.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstname:
+                  type: string
+                lastname:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+                access:
+                  type: string
+      responses:
+        '201':
+          description: Création d'utilisateur reussi
+        '400':
+          description: Mauvaise requête
+        '401':
+          description: Token invalide
+        '403':
+          description: Accès insuffisant
+    get:
+      tags:
+        - 'User Management'
+      summary: Listes tous les utilisateurs
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Une liste d'utilisateurs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    firstname:
+                      type: string
+                    lastname:
+                      type: string
+                    email:
+                      type: string
+        '401':
+          description: Token invalide
+        '403':
+          description: Accès insuffisant
+  /cage:
+    post:
+      tags:
+        - 'Cage Management'
+      summary: Créer une cage.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        '201':
+          description: Création de cage reussi
+        '400':
+          description: Mauvaise requête
+        '401':
+          description: Token invalide
+        '403':
+          description: Accès insuffisant
+    get:
+      tags:
+        - 'Cage Management'
+      summary: Listes toutes les cages
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Une liste de cages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+        '401':
+          description: Token invalide
+        '403':
+          description: Accès insuffisant
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
