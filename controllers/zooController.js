@@ -15,10 +15,13 @@ exports.getZooById = (req, res) => {
 };
 
 exports.createZoo = (req, res) => {
-    const { name, date } = req.body;
-    // You should generate the ID inside the service, not accept it from the client.
-    const zoo = zooService.createZoo(name, date);
-    res.status(201).json(zoo);
+    const { id, name, date } = req.body;
+    try {
+      const zoo = zooService.createZoo(id, name, date);
+      res.status(201).json(zoo);
+    } catch (error) {
+      res.status(400).send(error.message);
+    }
 };
 
 exports.updateZooById = (req, res) => {
