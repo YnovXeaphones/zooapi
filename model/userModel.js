@@ -1,18 +1,40 @@
-const { Model, DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+const { DataTypes } = require('sequelize');
 
-class User extends Model {}
-
-User.init({
-    firstName: DataTypes.STRING,
-    lastName: DataTypes.STRING,
-    mail: { type: DataTypes.STRING, unique: true },
-    password: DataTypes.STRING,
-    access: DataTypes.STRING,
-    zooId: { 
-        type: DataTypes.STRING,
-        references: { model: 'Zoo', key: 'id' }
+module.exports = (sequelize) => {
+  return sequelize.define('User', {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+      allowNull: false
+    },
+    firstName: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    lastName: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    mail: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    access: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    zooId: {
+      type: DataTypes.STRING,
+      references: {
+        model: 'Zoos',
+        key: 'id'
+      }
     }
-},  { sequelize, modelName: 'User' });
-
-module.exports = User;
+  });
+};
