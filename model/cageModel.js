@@ -19,8 +19,6 @@ module.exports = (sequelize) => {
         key: 'id'
       }
     }
-  }, {
-    timestamps: false
   });
 };
 
