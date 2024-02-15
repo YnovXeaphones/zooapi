@@ -46,7 +46,7 @@ paths:
                     type: string
         '401':
           description: Authentification échoué
-  /createzoo:
+  /createZoo:
     post:
       tags:
         - 'Zoo Management'
@@ -138,7 +138,115 @@ paths:
           description: Token invalide
         '403':
           description: Accès insuffisant
-  /cage:
+  /users/{userId}:
+    get:
+      tags:
+        - 'User Management'
+      summary: Information sur l'utilisateur.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: l'ID de l'utilisateur à afficher
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Un utilisateur.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  firstname:
+                    type: string
+                  lastname:
+                    type: string
+                  email:
+                    type: string
+        '401':
+          description: Token invalide
+        '403':
+          description: Accès insuffisant
+        '404':
+          description: Utilisateur inexistant
+    put:
+      tags:
+        - 'User Management'
+      summary: Mis à jour de l'utilisateur.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: l'ID de l'utilisateur à mettre à jour
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstname:
+                  type: string
+                lastname:
+                  type: string
+                email:
+                  type: string
+                access:
+                  type: string
+              required:
+                - email
+      responses:
+        '200':
+          description: Utilisateur mis à jour.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  firstname:
+                    type: string
+                  lastname:
+                    type: string
+                  email:
+                    type: string
+        '400':
+          description: Mauvaise requête
+        '401':
+          description: Token invalide
+        '403':
+          description: Accès insuffisant
+        '404':
+          description: Utilisateur inexistant
+    delete:
+      tags:
+        - 'User Management'
+      summary: Suppression d'un utilisateur.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: l'ID de l'utilisateur à supprimer
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Utilisateur supprimé
+        '401':
+          description: Token invalide
+        '403':
+          description: Accès insuffisant
+        '404':
+          description: Utilisateur inexistant
+  /cages:
     post:
       tags:
         - 'Cage Management'
@@ -185,6 +293,265 @@ paths:
           description: Token invalide
         '403':
           description: Accès insuffisant
+  /cage/{cageId}:
+    get:
+      tags:
+        - 'Cage Management'
+      summary: Information sur une cage.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: cageId
+          in: path
+          required: true
+          description: l'ID de la cage à afficher
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Une cage.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+        '401':
+          description: Token invalide
+        '403':
+          description: Accès insuffisant
+        '404':
+          description: Cage inexistant
+    put:
+      tags:
+        - 'Cage Management'
+      summary: Mis à jour d'une cage.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: cageId
+          in: path
+          required: true
+          description: l'ID de la cage à mettre à jour
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+              required:
+                - name
+      responses:
+        '200':
+          description: Cage mis à jour.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+        '400':
+          description: Mauvaise requête
+        '401':
+          description: Token invalide
+        '403':
+          description: Accès insuffisant
+        '404':
+          description: Cage inexistant
+    delete:
+      tags:
+        - 'Cage Management'
+      summary: Suppression d'une cage.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: cageId
+          in: path
+          required: true
+          description: l'ID de la cage à supprimer
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Cage supprimé
+        '401':
+          description: Token invalide
+        '403':
+          description: Accès insuffisant
+        '404':
+          description: Cage inexistant
+  /animals:
+    post:
+      tags:
+        - 'Animal Management'
+      summary: Créer un animal.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                specie:
+                  type: string
+                diet:
+                  type: string
+                cage_id:
+                  type: integer
+      responses:
+        '201':
+          description: Création d'animal reussi
+        '400':
+          description: Mauvaise requête
+        '401':
+          description: Token invalide
+        '403':
+          description: Accès insuffisant
+    get:
+      tags:
+        - 'Animal Management'
+      summary: Listes tous les animaux
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Une liste d'animaux
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    specie:
+                      type: string
+                    diet:
+                      type: string
+                    cage_id:
+                      type: integer
+        '401':
+          description: Token invalide
+        '403':
+          description: Accès insuffisant
+  /animals/{animalId}:
+    get:
+      tags:
+        - 'Animal Management'
+      summary: Information sur un animal.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: animalId
+          in: path
+          required: true
+          description: l'ID de l'animal à afficher
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Un animal.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                      type: string
+                  specie:
+                    type: string
+                  diet:
+                    type: string
+                  cage_id:
+                    type: integer
+        '401':
+          description: Token invalide
+        '403':
+          description: Accès insuffisant
+        '404':
+          description: Animal inexistant
+    put:
+      tags:
+        - 'Animal Management'
+      summary: Mis à jour d'un animal.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: animalId
+          in: path
+          required: true
+          description: l'ID de l'animal à mettre à jour
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                specie:
+                  type: string
+                diet:
+                  type: string
+                cage_id:
+                  type: integer
+      responses:
+        '200':
+          description: Anumal mis à jour.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+        '400':
+          description: Mauvaise requête
+        '401':
+          description: Token invalide
+        '403':
+          description: Accès insuffisant
+        '404':
+          description: Animal inexistant
+    delete:
+      tags:
+        - 'Animal Management'
+      summary: Suppression d'un animal.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: animalId
+          in: path
+          required: true
+          description: l'ID de l'animal à supprimer
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Animal supprimé
+        '401':
+          description: Token invalide
+        '403':
+          description: Accès insuffisant
+        '404':
+          description: Animal inexistant
 components:
   securitySchemes:
     bearerAuth:
