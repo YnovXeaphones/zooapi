@@ -1,16 +1,33 @@
-const { Model, DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+const { DataTypes } = require('sequelize');
 
-class Animal extends Model {}
-
-Animal.init({
-    name: DataTypes.STRING,
-    specie: DataTypes.STRING,
-    diet: DataTypes.ENUM('Carnivore', 'Herbivore', 'Omnivore'),
+module.exports = (sequelize) => {
+  return sequelize.define('Animal', {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+      allowNull: false
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    specie: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    diet: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     cageId: {
-        type: DataTypes.INTEGER,
-        references: { model: 'Cage', key: 'id' }
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'Cages',
+        key: 'id'
+      }
     }
-},  { sequelize, modelName: 'Animal' });
-
-module.exports = Animal;
+  }, {
+    timestamps: false
+  });
+};
