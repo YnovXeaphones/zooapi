@@ -1,4 +1,5 @@
 const express = require('express');
+const openApiValidator = require('express-openapi-validator');
 
 const userRouter = require('./routers/userRouter');
 const zooRouter = require('./routers/zooRouter');
@@ -7,6 +8,12 @@ const animalRouter = require('./routers/animalRouter');
 
 const app = express();
 app.use(express.json());
+
+app.use(
+  openApiValidator.middleware({
+    apiSpec: './Zooapi.yml',
+  }),
+);
 
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/zoos', zooRouter);
