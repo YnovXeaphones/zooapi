@@ -14,10 +14,9 @@ const zooRouter = require('./routers/zooRouter');
 const cageRouter = require('./routers/cageRouter');
 const animalRouter = require('./routers/animalRouter');
 
+// App Configuration
 const app = express();
 app.use(express.json());
-
-app.use('/api/v1/documentation', swaggerUi.serve, swaggerUi.setup(openApiDocumentation));
 
 app.use(
   openApiValidator.middleware({
@@ -25,10 +24,17 @@ app.use(
   }),
 );
 
-app.use('/api/v1/users', userRouter);
-app.use('/api/v1/zoos', zooRouter);
-app.use('/api/v1/cages', cageRouter);
-app.use('/api/v1/animals', animalRouter);
+// Routes configuration
+
+// v1
+const v1prefix = "/api/v1"
+
+app.use(`${v1prefix}/documentation`, swaggerUi.serve, swaggerUi.setup(openApiDocumentation));
+
+app.use(`${v1prefix}/users`, userRouter);
+app.use(`${v1prefix}/zoos`, zooRouter);
+app.use(`${v1prefix}/cages`, cageRouter);
+app.use(`${v1prefix}/animals`, animalRouter);
 
 app.get('/', (req, res) => {
   res.send('Bienvenue sur l\'API du Zoo!');
