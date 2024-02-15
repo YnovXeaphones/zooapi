@@ -12,8 +12,8 @@ exports.getCageById = (id) => {
     return cages.find(cage => cage.id === id);
 };
 
-exports.createCage = (id, name, zooId) => {
-    const newCage = { id: nextCageId++, id, name, zooId };
+exports.createCage = (name, zooId) => {
+    const newCage = { id: nextCageId++, name, zooId };
     cages.push(newCage);
     return newCage;
 };

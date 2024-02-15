@@ -12,8 +12,8 @@ exports.getZooById = (id) => {
     return zoos.find(zoo => zoo.id === id);
 };
 
-exports.createZoo = (id, name, date) => {
-    const newZoo = { id: nextZooId++, id, name, date };
+exports.createZoo = (name, date) => {
+    const newZoo = { id: nextZooId++, name, date };
     zoos.push(newZoo);
     return newZoo;
 };

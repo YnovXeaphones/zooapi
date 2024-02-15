@@ -12,8 +12,8 @@ exports.getanimAlById = (id) => {
     return animals.find(animal => animal.id === id);
 };
 
-exports.createAnimal = (id, name, specie, diet, cageId) => {
-    const newAnimal = { id: nextAnimalId++, id, name, specie, diet, cageId };
+exports.createAnimal = (name, specie, diet, cageId) => {
+    const newAnimal = { id: nextAnimalId++, name, specie, diet, cageId };
     animals.push(newAnimal);
     return newAnimal;
 };
