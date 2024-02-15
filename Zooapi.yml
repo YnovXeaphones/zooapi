@@ -1,0 +1,640 @@
+openapi: '3.0.2'
+info:
+  title: ZooAPI
+  description: "API de management de Zoos"
+  version: '1.0'
+servers:
+  - url: '{protocol}://{server}/v{version}'
+    variables:
+      protocol:
+        enum:
+          - http
+          - https
+        default: http
+      server:
+        default: localhost:8080
+      version:
+        default: '1'
+paths:
+  /login:
+    post:
+      tags:
+        - "Authentification"
+      summary: Authentifie l'utilisateur et retourne un token.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                zoo_id:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Authentification réussie
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        '401':
+          description: Authentification échoué
+  /createZoo:
+    post:
+      tags:
+        - 'Zoo Management'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                zoo_name:
+                  type: string
+                firstname:
+                  type: string
+                lastname:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '201':
+          description: Création du zoo réussi
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  zoo_id:
+                    type: string
+        '400':
+          description: Mauvaise requête
+  /deleteZoo:
+    delete:
+      tags:
+        - 'Zoo Management'
+      summary: Supprimer un zoo.
+      security:
+        - bearerAuth: []
+      responses:
+        '204':
+          description: Zoo supprimé
+        '401':
+          description: Token invalide
+        '403':
+          description: Accès insuffisant
+        '404':
+          description: Zoo inexistant
+  /updateZoo:
+    put:
+      tags:
+        - 'Zoo Management'
+      summary: Mettre à jour un zoo.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                zoo_name:
+                  type: string
+              required:
+                - zoo_name
+      responses:
+        '200':
+          description: Zoo mis à jour.
+        '400':
+          description: Mauvaise requête
+        '401':
+          description: Token invalide
+        '403':
+          description: Accès insuffisant
+        '404':
+          description: Zoo inexistant
+  /users:
+    post:
+      tags:
+        - 'User Management'
+      summary: Créer un utilisateur.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstname:
+                  type: string
+                lastname:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+                access:
+                  type: string
+      responses:
+        '201':
+          description: Création d'utilisateur reussi
+        '400':
+          description: Mauvaise requête
+        '401':
+          description: Token invalide
+        '403':
+          description: Accès insuffisant
+    get:
+      tags:
+        - 'User Management'
+      summary: Listes tous les utilisateurs
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Une liste d'utilisateurs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    firstname:
+                      type: string
+                    lastname:
+                      type: string
+                    email:
+                      type: string
+        '401':
+          description: Token invalide
+        '403':
+          description: Accès insuffisant
+  /users/{userId}:
+    get:
+      tags:
+        - 'User Management'
+      summary: Information sur l'utilisateur.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: l'ID de l'utilisateur à afficher
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Un utilisateur.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  firstname:
+                    type: string
+                  lastname:
+                    type: string
+                  email:
+                    type: string
+        '401':
+          description: Token invalide
+        '403':
+          description: Accès insuffisant
+        '404':
+          description: Utilisateur inexistant
+    put:
+      tags:
+        - 'User Management'
+      summary: Mis à jour de l'utilisateur.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: l'ID de l'utilisateur à mettre à jour
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstname:
+                  type: string
+                lastname:
+                  type: string
+                email:
+                  type: string
+                access:
+                  type: string
+              required:
+                - email
+      responses:
+        '200':
+          description: Utilisateur mis à jour.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  firstname:
+                    type: string
+                  lastname:
+                    type: string
+                  email:
+                    type: string
+        '400':
+          description: Mauvaise requête
+        '401':
+          description: Token invalide
+        '403':
+          description: Accès insuffisant
+        '404':
+          description: Utilisateur inexistant
+    delete:
+      tags:
+        - 'User Management'
+      summary: Suppression d'un utilisateur.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: l'ID de l'utilisateur à supprimer
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Utilisateur supprimé
+        '401':
+          description: Token invalide
+        '403':
+          description: Accès insuffisant
+        '404':
+          description: Utilisateur inexistant
+  /cages:
+    post:
+      tags:
+        - 'Cage Management'
+      summary: Créer une cage.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        '201':
+          description: Création de cage reussi
+        '400':
+          description: Mauvaise requête
+        '401':
+          description: Token invalide
+        '403':
+          description: Accès insuffisant
+    get:
+      tags:
+        - 'Cage Management'
+      summary: Listes toutes les cages
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Une liste de cages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+        '401':
+          description: Token invalide
+        '403':
+          description: Accès insuffisant
+  /cage/{cageId}:
+    get:
+      tags:
+        - 'Cage Management'
+      summary: Information sur une cage.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: cageId
+          in: path
+          required: true
+          description: l'ID de la cage à afficher
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Une cage.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+        '401':
+          description: Token invalide
+        '403':
+          description: Accès insuffisant
+        '404':
+          description: Cage inexistant
+    put:
+      tags:
+        - 'Cage Management'
+      summary: Mis à jour d'une cage.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: cageId
+          in: path
+          required: true
+          description: l'ID de la cage à mettre à jour
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+              required:
+                - name
+      responses:
+        '200':
+          description: Cage mis à jour.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+        '400':
+          description: Mauvaise requête
+        '401':
+          description: Token invalide
+        '403':
+          description: Accès insuffisant
+        '404':
+          description: Cage inexistant
+    delete:
+      tags:
+        - 'Cage Management'
+      summary: Suppression d'une cage.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: cageId
+          in: path
+          required: true
+          description: l'ID de la cage à supprimer
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Cage supprimé
+        '401':
+          description: Token invalide
+        '403':
+          description: Accès insuffisant
+        '404':
+          description: Cage inexistant
+  /cages/{cageId}/animals:
+    get:
+      tags:
+        - 'Cage Management'
+        - 'Animal Management'
+      summary: Listes tous les animaux présent dans une cage
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: cageId
+          in: path
+          required: true
+          description: l'ID de la cage à afficher
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Une liste d'animaux
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    specie:
+                      type: string
+                    diet:
+                      type: string
+        '401':
+          description: Token invalide
+        '403':
+          description: Accès insuffisant
+  /animals:
+    post:
+      tags:
+        - 'Animal Management'
+      summary: Créer un animal.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                specie:
+                  type: string
+                diet:
+                  type: string
+                cage_id:
+                  type: integer
+      responses:
+        '201':
+          description: Création d'animal reussi
+        '400':
+          description: Mauvaise requête
+        '401':
+          description: Token invalide
+        '403':
+          description: Accès insuffisant
+    get:
+      tags:
+        - 'Animal Management'
+      summary: Listes tous les animaux
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Une liste d'animaux
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    specie:
+                      type: string
+                    diet:
+                      type: string
+                    cage_id:
+                      type: integer
+        '401':
+          description: Token invalide
+        '403':
+          description: Accès insuffisant
+  /animals/{animalId}:
+    get:
+      tags:
+        - 'Animal Management'
+      summary: Information sur un animal.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: animalId
+          in: path
+          required: true
+          description: l'ID de l'animal à afficher
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Un animal.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                      type: string
+                  specie:
+                    type: string
+                  diet:
+                    type: string
+                  cage_id:
+                    type: integer
+        '401':
+          description: Token invalide
+        '403':
+          description: Accès insuffisant
+        '404':
+          description: Animal inexistant
+    put:
+      tags:
+        - 'Animal Management'
+      summary: Mis à jour d'un animal.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: animalId
+          in: path
+          required: true
+          description: l'ID de l'animal à mettre à jour
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                specie:
+                  type: string
+                diet:
+                  type: string
+                cage_id:
+                  type: integer
+      responses:
+        '200':
+          description: Anumal mis à jour.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+        '400':
+          description: Mauvaise requête
+        '401':
+          description: Token invalide
+        '403':
+          description: Accès insuffisant
+        '404':
+          description: Animal inexistant
+    delete:
+      tags:
+        - 'Animal Management'
+      summary: Suppression d'un animal.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: animalId
+          in: path
+          required: true
+          description: l'ID de l'animal à supprimer
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Animal supprimé
+        '401':
+          description: Token invalide
+        '403':
+          description: Accès insuffisant
+        '404':
+          description: Animal inexistant
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
