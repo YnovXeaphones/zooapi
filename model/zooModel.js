@@ -1,15 +1,19 @@
-const { Model, DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+const { DataTypes } = require('sequelize');
 
-class Zoo extends Model {}
-
-Zoo.init({
+module.exports = (sequelize) => {
+  return sequelize.define('Zoo', {
     id: {
-        type: DataTypes.STRING,
-        primaryKey: true,
+      type: DataTypes.STRING,
+      primaryKey: true,
+      allowNull: false
     },
-    name: DataTypes.STRING,
-    date: DataTypes.DATEONLY
-},  { sequelize, modelName: 'Zoo' });
-
-module.exports = Zoo;
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    date: {
+      type: DataTypes.DATEONLY,
+      allowNull: false
+    }
+  });
+};
