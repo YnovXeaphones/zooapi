@@ -79,6 +79,51 @@ paths:
                     type: string
         '400':
           description: Mauvaise requête
+  /deleteZoo:
+    delete:
+      tags:
+        - 'Zoo Management'
+      summary: Supprimer un zoo.
+      security:
+        - bearerAuth: []
+      responses:
+        '204':
+          description: Zoo supprimé
+        '401':
+          description: Token invalide
+        '403':
+          description: Accès insuffisant
+        '404':
+          description: Zoo inexistant
+  /updateZoo:
+    put:
+      tags:
+        - 'Zoo Management'
+      summary: Mettre à jour un zoo.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                zoo_name:
+                  type: string
+              required:
+                - zoo_name
+      responses:
+        '200':
+          description: Zoo mis à jour.
+        '400':
+          description: Mauvaise requête
+        '401':
+          description: Token invalide
+        '403':
+          description: Accès insuffisant
+        '404':
+          description: Zoo inexistant
   /users:
     post:
       tags:
