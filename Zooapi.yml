@@ -389,6 +389,41 @@ paths:
           description: Accès insuffisant
         '404':
           description: Cage inexistant
+  /cages/{cageId}/animals:
+    get:
+      tags:
+        - 'Cage Management'
+        - 'Animal Management'
+      summary: Listes tous les animaux présent dans une cage
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: cageId
+          in: path
+          required: true
+          description: l'ID de la cage à afficher
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Une liste d'animaux
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    specie:
+                      type: string
+                    diet:
+                      type: string
+        '401':
+          description: Token invalide
+        '403':
+          description: Accès insuffisant
   /animals:
     post:
       tags:
