@@ -19,9 +19,9 @@ const app = express();
 app.use(express.json());
 
 app.use(
-  openApiValidator.middleware({
-    apiSpec: path.join(__dirname, 'Zooapi.yml'),
-  }),
+    openApiValidator.middleware({
+        apiSpec: path.join(__dirname, 'Zooapi.yml'),
+    }),
 );
 
 // Routes configuration
@@ -37,7 +37,7 @@ app.use(`${v1prefix}/cages`, cageRouter);
 app.use(`${v1prefix}/animals`, animalRouter);
 
 app.get('/', (req, res) => {
-  res.send('Bienvenue sur l\'API du Zoo!');
+    res.send('Bienvenue sur l\'API du Zoo!');
 });
 
 module.exports = app;

@@ -1,6 +1,13 @@
-const app = require('./app');
+const { instance } = require('./model/indexModel');
 
-app.listen(3000, () => {
-    console.log("Server running on http://localhost:3000");
-    console.log("API documentation on http://localhost:3000/api/v1/documentation");
+instance.sync().then(() => {
+    console.log('Database & tables created!');
+
+    const app = require('./app');
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}.`);
+    });
+}).catch(error => {
+    console.error('Failed to sync database:', error);
 });
