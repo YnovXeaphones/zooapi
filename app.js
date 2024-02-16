@@ -32,7 +32,7 @@ const v1prefix = "/api/v1"
 app.use(`${v1prefix}/documentation`, swaggerUi.serve, swaggerUi.setup(openApiDocumentation));
 
 app.use(`${v1prefix}/users`, userRouter);
-app.use(`${v1prefix}/zoos`, zooRouter);
+app.use(`${v1prefix}`, zooRouter);
 app.use(`${v1prefix}/cages`, cageRouter);
 app.use(`${v1prefix}/animals`, animalRouter);
 
