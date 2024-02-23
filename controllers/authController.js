@@ -4,19 +4,23 @@ const jwtConfig = require('../jwt.config');
 const bcrypt = require('bcrypt');
 
 exports.login = async (req, res) => {
-    const { mail, password } = req.body;
+    const { mail, password, zooId } = req.body;
 
     try {
-        const user = await User.findOne({ where: { mail: mail } });
+        const user = await User.findOne({ where: { mail, zooId } });
 
-        if (user && await bcrypt.compare(password, user.password)) {
+        if (!user) {
+            return res.status(401).send({ message: 'Invalid credentials' });
+        }
+
+        if (await bcrypt.compare(password, user.password)) {
             const token = jwt.sign(
-                { zooId: user.zooId, access: user.access },
+                { userId: user.id },
                 jwtConfig.jwtSecret,
                 { expiresIn: '1h' }
             );
 
-            res.json({ token: token });
+            res.status(200).json({ token: token });
         } else {
             res.status(401).send({ message: 'Invalid mail or password' });
         }

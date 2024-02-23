@@ -1,14 +1,8 @@
 const jwt = require('jsonwebtoken');
 const jwtConfig = require('../jwt.config');
+const userService = require('../services/userService');
 
-const parseToken = (decoded) => {
-    return {
-        zooId: decoded.zooId,
-        access: decoded.access,
-    };
-};
-
-const verifyToken = (req, res, next) => {
+const verifyToken = async (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
 
@@ -16,9 +10,13 @@ const verifyToken = (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, jwtConfig.jwtSecret);
-        const tokenData = parseToken(decoded);
-        req.zooId = tokenData.zooId;
-        req.access = tokenData.access;
+        const user = await userService.getUserById(decoded.userId);
+        if (!user) {
+            return res.status(401).send({ message: 'Invalid Token' });
+        }
+        req.userId = decoded.userId;
+        req.zooId = user.zooId;
+        req.access = user.access;
         next();
     } catch (err) {
         return res.status(401).send({ message: 'Invalid Token' });
