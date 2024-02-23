@@ -2,11 +2,11 @@ const zooService = require('../services/zooService');
 const userService = require('../services/userService');
 
 exports.createZoo = async (req, res) => {
-    const { zoo_name, firstname, lastname, email, password } = req.body;   
+    const { zoo_name, firstname, lastname, mail, password } = req.body;   
     try {
         const zoo = await zooService.createZoo(zoo_name);
         const access = 'acrud';
-        const user = await userService.createUser(firstname, lastname, email, password, access, zoo.id);
+        const user = await userService.createUser(firstname, lastname, mail, password, access, zoo.id);
         res.status(201).json({ "zoo_id": zoo.id });
     } catch (error) {
         res.status(400).send(error.message);

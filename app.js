@@ -9,6 +9,7 @@ const apiSpec = path.join(__dirname, 'Zooapi.yml');
 const openApiDocumentation = YAML.load(apiSpec);
 
 // Router Loading
+const authRouter = require('./routers/authRouter');
 const userRouter = require('./routers/userRouter');
 const zooRouter = require('./routers/zooRouter');
 const cageRouter = require('./routers/cageRouter');
@@ -31,6 +32,7 @@ const v1prefix = "/api/v1"
 
 app.use(`${v1prefix}/documentation`, swaggerUi.serve, swaggerUi.setup(openApiDocumentation));
 
+app.use(`${v1prefix}/login`, authRouter);
 app.use(`${v1prefix}/users`, userRouter);
 app.use(`${v1prefix}`, zooRouter);
 app.use(`${v1prefix}/cages`, cageRouter);

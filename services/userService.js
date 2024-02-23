@@ -45,3 +45,11 @@ exports.deleteUserById = async (id) => {
     });
     return count > 0;
 };
+
+exports.authenticateUser = async (mail, password) => {
+    const user = await User.findOne({ where: { mail } });
+    if (user && await bcrypt.compare(password, user.password)) {
+      return user; // L'authentification a réussi
+    }
+    return null; // Échec de l'authentification
+};
