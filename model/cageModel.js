@@ -13,7 +13,7 @@ module.exports = (sequelize) => {
       allowNull: false
     },
     zooId: {
-      type: DataTypes.STRING,
+      type: DataTypes.UUID,
       references: {
         model: 'Zoos',
         key: 'id'

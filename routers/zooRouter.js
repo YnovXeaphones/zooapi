@@ -3,9 +3,8 @@ const zooController = require('../controllers/zooController');
 
 const router = express.Router();
 
-router.get('/', zooController.getAllZoos);
-router.get('/:id', zooController.getZooById);
-router.put('/:id', zooController.updateZooById);
-router.delete('/:id', zooController.deleteZooById);
+router.post('/createZoo', zooController.createZoo)
+router.put('/updateZoo', zooController.updateZooById);
+router.delete('/deleteZoo', zooController.deleteZooById);
 
 module.exports = router;

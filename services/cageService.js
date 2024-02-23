@@ -1,38 +1,29 @@
-const cages = [
-    { id: 1, name: "Cage des lapins (oui oui on a des lapins)", zooId: "feghk56" },
-];
+const { Cage } = require('../model/indexModel');
 
-let nextCageId = cages.length + 1;
-
-exports.getAllCages = () => {
-    return cages;
+exports.getAllCages = async () => {
+    return await Cage.findAll();
 };
 
-exports.getCageById = (id) => {
-    return cages.find(cage => cage.id === id);
+exports.getCageById = async (id) => {
+    return await Cage.findByPk(id);
 };
 
-exports.createCage = (name, zooId) => {
-    const newCage = { id: nextCageId++, name, zooId };
-    cages.push(newCage);
-    return newCage;
+exports.createCage = async (name, zooId) => {
+    return await Cage.create({ name, zooId });
 };
 
-exports.updateCageById = (id, name, zooId) => {
-    const cageIndex = cages.findIndex(cage => cage.id === id);
-    if (cageIndex > -1) {
-        const updatedCage = { ...cages[cageIndex], id, name, zooId };
-        cages[cageIndex] = updatedCage;
-        return updatedCage;
+exports.updateCageById = async (id, name, zooId) => {
+    const cage = await Cage.findByPk(id);
+    if (cage) {
+        await cage.update({ name, zooId });
+        return cage;
     }
     return null;
 };
 
-exports.deleteCageById = (id) => {
-    const cageIndex = cages.findIndex(cage => cage.id === id);
-    if (cageIndex > -1) {
-        cages.splice(cageIndex, 1);
-        return true;
-    }
-    return false;
+exports.deleteCageById = async (id) => {
+    const count = await Cage.destroy({
+        where: { id }
+    });
+    return count > 0;
 };

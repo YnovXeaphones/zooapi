@@ -6,10 +6,10 @@ const instance = new Sequelize({
     storage: dbConfig.storage
 })
 
-const User = require('./user')(instance);
-const Zoo = require('./zoo')(instance);
-const Cage = require('./cage')(instance);
-const Animal = require('./animal')(instance);
+const User = require('./userModel')(instance);
+const Zoo = require('./zooModel')(instance);
+const Cage = require('./cageModel')(instance);
+const Animal = require('./animalModel')(instance);
 
 Zoo.hasMany(User, { foreignKey: 'zooId' });
 Zoo.hasMany(Cage, { foreignKey: 'zooId' });
