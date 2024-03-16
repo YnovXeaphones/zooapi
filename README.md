@@ -30,4 +30,5 @@ Pour installer et démarrer l'API :
 ## Documentation API
 
 Consultez le fichier `zooapi.yml` pour la spécification OpenAPI complète.
-Pour avoir accès au swagger ( version interactive ) utilisez : [lien_vers_documentation_interactive].
+Après avoir lancé le serveur, pour avoir accès au swagger utilisez le lien : [(http://localhost:3000/api/v1/documentation)].
+
