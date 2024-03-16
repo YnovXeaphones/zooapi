@@ -15,6 +15,7 @@
     "express-openapi-validator": "^5.1.6",
     "jsonwebtoken": "^9.0.2",
     "path": "^0.12.7",
+    "request": "^2.88.2",
     "sequelize": "^6.37.0",
     "sqlite3": "^5.1.7",
     "swagger-ui-express": "^5.0.0",

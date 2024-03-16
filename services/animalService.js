@@ -1,38 +1,41 @@
-const animals = [
-    { id: 1, name: "Simba", specie: "Lion", diet: "Carnivore", cageId: 1 },
-];
+const { Animal } = require('../model/indexModel');
 
-let nextAnimalId = animals.length + 1;
-
-exports.getAllAnimals = () => {
-    return animals;
+exports.getAllAnimals = async () => {
+    return await Animal.findAll();
 };
 
-exports.getAnimalById = (id) => {
-    return animals.find(animal => animal.id === id);
+exports.getAnimalById = async (id) => {
+    return await Animal.findByPk(id);
 };
 
-exports.createAnimal = (name, specie, diet, cageId) => {
-    const newAnimal = { id: nextAnimalId++, name, specie, diet, cageId };
-    animals.push(newAnimal);
-    return newAnimal;
+exports.createAnimal = async (name, specie, diet, cageId) => {
+    return await Animal.create({ name, specie, diet, cageId });
 };
 
-exports.updateAnimalById = (id, name, specie, diet, cageId) => {
-    const animalIndex = animals.findIndex(animal => animal.id === id);
-    if (animalIndex > -1) {
-        const updatedAnimal = { ...animals[animalIndex], id, name, specie, diet, cageId };
-        animals[animalIndex] = updatedAnimal;
-        return updatedAnimal;
+exports.updateAnimalById = async (id, name = null, specie = null, diet = null, cageId = null) => {
+    const animal = await Animal.findOne({
+        where: { id }
+    });
+    if (animal) {
+        await animal.update({ 
+            name: name || animal.name, 
+            specie: specie || animal.specie, 
+            diet: diet || animal.diet, 
+            cageId: cageId || animal.cageId});
+        return animal;
     }
     return null;
 };
 
-exports.deleteAnimalById = (id) => {
-    const animalIndex = animals.findIndex(animal => animal.id === id);
-    if (animalIndex > -1) {
-        animals.splice(animalIndex, 1);
-        return true;
-    }
-    return false;
+exports.deleteAnimalById = async (id) => {
+    const count = await Animal.destroy({
+        where: { id }
+    });
+    return count > 0;
+};
+
+exports.getAnimalsByCageId = async (cageId) => {
+    return await Animal.findAll({
+        where: { cageId }
+    });
 };

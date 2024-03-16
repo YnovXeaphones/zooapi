@@ -1,29 +1,38 @@
 const { Cage } = require('../model/indexModel');
 
-exports.getAllCages = async () => {
-    return await Cage.findAll();
+exports.getAllCages = async (zooId) => {
+    return await Cage.findAll({
+        where: { zooId },
+        attributes: { exclude: ['zooId'] }
+    });
 };
 
-exports.getCageById = async (id) => {
-    return await Cage.findByPk(id);
+exports.getCageById = async (id, zooId) => {
+    return await Cage.findOne({
+        where: { id, zooId },
+        attributes: { exclude: ['zooId'] }
+    });
 };
 
 exports.createCage = async (name, zooId) => {
     return await Cage.create({ name, zooId });
 };
 
-exports.updateCageById = async (id, name, zooId) => {
-    const cage = await Cage.findByPk(id);
+exports.updateCageById = async (id, zooId, name = null) => {
+    const cage = await Cage.findOne({
+        where: { id, zooId },
+        attributes: { exclude: ['zooId'] }
+    });
     if (cage) {
-        await cage.update({ name, zooId });
+        await cage.update({ name: name || cage.name });
         return cage;
     }
     return null;
 };
 
-exports.deleteCageById = async (id) => {
+exports.deleteCageById = async (id, zooId) => {
     const count = await Cage.destroy({
-        where: { id }
+        where: { id, zooId }
     });
     return count > 0;
 };

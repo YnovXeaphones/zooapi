@@ -3,12 +3,22 @@ const bcrypt = require('bcrypt');
 
 const saltRounds = 10;
 
-exports.getAllUsers = async () => {
-    return await User.findAll();
+exports.getAllUsers = async (zooId) => {
+    return await User.findAll({ 
+        where: { zooId },
+        attributes: { exclude: ['password','zooId'] } 
+    });
 };
 
-exports.getUserById = async (id) => {
+exports.getUserByPK = async (id) => {
     return await User.findByPk(id);
+};
+
+exports.getUserById = async (id, zooId) => {
+    return await User.findOne({
+        where: { id: id, zooId: zooId },
+        attributes: { exclude: ['password','zooId'] }
+    });
 };
 
 exports.createUser = async (firstName, lastName, mail, password, access, zooId) => {
@@ -23,25 +33,22 @@ exports.createUser = async (firstName, lastName, mail, password, access, zooId) 
     });
 };
 
-exports.updateUserById = async (id, firstName, lastName, mail, password, access, zooId) => {
-    const user = await User.findByPk(id);
+exports.updateUserById = async (id, zooId, firstName = null, lastName = null, mail = null, access = null) => {
+    const user =  await User.findOne({ where: { id: id, zooId: zooId } });
     if (user) {
-        const hashedPassword = await bcrypt.hash(password, saltRounds);
         return await user.update({
-            firstName,
-            lastName,
-            mail,
-            password: hashedPassword,
-            access,
-            zooId
+            firstName: firstName || user.firstName,
+            lastName: lastName || user.lastName,
+            mail: mail || user.mail,
+            access: access || user.access,
         });
     }
     return null;
 };
 
-exports.deleteUserById = async (id) => {
+exports.deleteUserById = async (id, zooId) => {
     const count = await User.destroy({
-        where: { id }
+        where: { id: id, zooId: zooId }
     });
     return count > 0;
 };

@@ -19,7 +19,6 @@ module.exports = (sequelize) => {
     mail: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true
     },
     password: {
       type: DataTypes.STRING,
@@ -36,5 +35,12 @@ module.exports = (sequelize) => {
         key: 'id'
       }
     }
+  }, {
+    indexes: [
+      {
+        unique: true,
+        fields: ['mail', 'zooId']
+      }
+    ]
   });
 };

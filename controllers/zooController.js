@@ -13,11 +13,14 @@ exports.createZoo = async (req, res) => {
     }
 };
 
-exports.updateZooById = async (req, res) => {
-    const id = req.params.id;
-    const { name, date } = req.body;   
+exports.updateZoo = async (req, res) => {
+    if (!req.access.toLowerCase().includes('u') || !req.access.toLowerCase().includes('a')) {
+        return res.status(403).send('Unauthorized');
+    }
+    const id = req.zooId;
+    const { name } = req.body;   
     try {
-        const updatedZoo = await zooService.updateZooById(id, name, date);
+        const updatedZoo = await zooService.updateZooById(id, name);
         if (updatedZoo) {
             res.json(updatedZoo);
         } else {
@@ -29,8 +32,11 @@ exports.updateZooById = async (req, res) => {
 };
 
 
-exports.deleteZooById = async (req, res) => {
-    const id = req.params.id; 
+exports.deleteZoo = async (req, res) => {
+    if (!req.access.toLowerCase().includes('d') || !req.access.toLowerCase().includes('a')) {
+        return res.status(403).send('Unauthorized');
+    }
+    const id = req.zooId;
     try {
         const success = await zooService.deleteZooById(id);
         if (success) {

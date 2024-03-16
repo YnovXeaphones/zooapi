@@ -4,7 +4,7 @@ info:
   description: "API de management de Zoos"
   version: '1.0'
 servers:
-  - url: '{protocol}://{server}/v{version}'
+  - url: '{protocol}://{server}/api/v{version}'
     variables:
       protocol:
         enum:
@@ -12,7 +12,7 @@ servers:
           - https
         default: http
       server:
-        default: localhost:8080
+        default: localhost:3000
       version:
         default: '1'
 paths:
@@ -30,7 +30,7 @@ paths:
               properties:
                 zoo_id:
                   type: string
-                email:
+                mail:
                   type: string
                 password:
                   type: string
@@ -59,11 +59,11 @@ paths:
               properties:
                 zoo_name:
                   type: string
-                firstname:
+                firstName:
                   type: string
-                lastname:
+                lastName:
                   type: string
-                email:
+                mail:
                   type: string
                 password:
                   type: string
@@ -109,10 +109,10 @@ paths:
             schema:
               type: object
               properties:
-                zoo_name:
+                name:
                   type: string
               required:
-                - zoo_name
+                - name
       responses:
         '200':
           description: Zoo mis à jour.
@@ -138,11 +138,11 @@ paths:
             schema:
               type: object
               properties:
-                firstname:
+                firstName:
                   type: string
-                lastname:
+                lastName:
                   type: string
-                email:
+                mail:
                   type: string
                 password:
                   type: string
@@ -173,11 +173,11 @@ paths:
                 items:
                   type: object
                   properties:
-                    firstname:
+                    firstName:
                       type: string
-                    lastname:
+                    lastName:
                       type: string
-                    email:
+                    mail:
                       type: string
         '401':
           description: Token invalide
@@ -205,11 +205,11 @@ paths:
               schema:
                 type: object
                 properties:
-                  firstname:
+                  firstName:
                     type: string
-                  lastname:
+                  lastName:
                     type: string
-                  email:
+                  mail:
                     type: string
         '401':
           description: Token invalide
@@ -237,16 +237,16 @@ paths:
             schema:
               type: object
               properties:
-                firstname:
+                firstName:
                   type: string
-                lastname:
+                lastName:
                   type: string
-                email:
+                mail:
                   type: string
                 access:
                   type: string
               required:
-                - email
+                - mail
       responses:
         '200':
           description: Utilisateur mis à jour.
@@ -255,11 +255,11 @@ paths:
               schema:
                 type: object
                 properties:
-                  firstname:
+                  firstName:
                     type: string
-                  lastname:
+                  lastName:
                     type: string
-                  email:
+                  mail:
                     type: string
         '400':
           description: Mauvaise requête
@@ -338,7 +338,7 @@ paths:
           description: Token invalide
         '403':
           description: Accès insuffisant
-  /cage/{cageId}:
+  /cages/{cageId}:
     get:
       tags:
         - 'Cage Management'
@@ -489,7 +489,7 @@ paths:
                   type: string
                 diet:
                   type: string
-                cage_id:
+                cageId:
                   type: integer
       responses:
         '201':
@@ -522,7 +522,7 @@ paths:
                       type: string
                     diet:
                       type: string
-                    cage_id:
+                    cageId:
                       type: integer
         '401':
           description: Token invalide
@@ -556,7 +556,7 @@ paths:
                     type: string
                   diet:
                     type: string
-                  cage_id:
+                  cageId:
                     type: integer
         '401':
           description: Token invalide
@@ -590,7 +590,7 @@ paths:
                   type: string
                 diet:
                   type: string
-                cage_id:
+                cageId:
                   type: integer
       responses:
         '200':
@@ -626,6 +626,29 @@ paths:
       responses:
         '204':
           description: Animal supprimé
+        '401':
+          description: Token invalide
+        '403':
+          description: Accès insuffisant
+        '404':
+          description: Animal inexistant
+  /animals/{animalId}/details:
+    get:
+      tags:
+        - 'Animal Management'
+      summary: Listes les details sur l'animal
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: animalId
+          in: path
+          required: true
+          description: l'ID de l'animal à afficher
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Les details de l'animal.
         '401':
           description: Token invalide
         '403':
