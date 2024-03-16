@@ -19,7 +19,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"zoo_name\": \"MySuperZoo\",\n  \"firstname\": \"John\",\n  \"lastname\": \"Doe\",\n  \"mail\": \"John.Doe@zoo.fr\",\n  \"password\": \"Password\"\n}",
+							"raw": "{\n  \"zoo_name\": \"MySuperZoo\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"mail\": \"John.Doe@zoo.fr\",\n  \"password\": \"Password\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"

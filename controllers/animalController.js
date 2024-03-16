@@ -32,14 +32,20 @@ exports.getAnimalById = async (req, res) => {
 
     try {
         const animal = await animalService.getAnimalById(id);
+
+        if (!animal) {
+            return res.status(404).send('Animal Not found');
+        }
+
         const cage = await cageService.getCageById(animal.cageId, zooId)
 
-        if (!cage || !animal) {
+        if (!cage) {
             return res.status(404).send('Animal Not found');
         }
 
         res.json(animal);
     } catch (error) {
+        console.log(error.message);
         res.status(500).send(error.message);
     }
 };
@@ -109,9 +115,14 @@ exports.updateAnimalById = async (req, res) => {
 
     try {
         const animal = await animalService.getAnimalById(id);
+
+        if (!animal) {
+            return res.status(404).send('Animal Not found');
+        }
+
         let cage = await cageService.getCageById(animal.cageId, zooId)
 
-        if (!cage || !animal) {
+        if (!cage) {
             return res.status(404).send('Animal Not found');
         }
         
@@ -143,9 +154,14 @@ exports.deleteAnimalById = async (req, res) => {
 
     try {
         const animal = await animalService.getAnimalById(id);
+
+        if (!animal) {
+            return res.status(404).send('Animal Not found');
+        }
+
         const cage = await cageService.getCageById(animal.cageId, zooId);
 
-        if (!cage || !animal) {
+        if (!cage) {
             return res.status(404).send('Animal Not found');
         }
 
