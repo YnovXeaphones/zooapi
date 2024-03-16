@@ -1,5 +1,7 @@
+const request = require('request');
 const animalService = require('../services/animalService');
 const cageService = require('../services/cageService');
+const { externalConfig } = require('../config'); 
 
 exports.getAllAnimals = async (req, res) => {
     if (!req.access.toLowerCase().includes('r')) {
@@ -41,6 +43,40 @@ exports.getAnimalById = async (req, res) => {
         res.status(500).send(error.message);
     }
 };
+
+exports.getAnimalDetailsById = async (req, res) => {
+    if (!req.access.toLowerCase().includes('r')) {
+        return res.status(403).send('Unauthorized');
+    }
+    const id = parseInt(req.params.id);
+
+    try {
+        const animal = await animalService.getAnimalById(id);
+        if (!animal) {
+            return res.status(404).send('Animal Not found');
+        }
+
+        request.get({
+            url: externalConfig.animalsDetails.url + animal.specie,
+            headers: {
+              'X-Api-Key': externalConfig.animalsDetails.key
+            },
+        }, function(error, response, body) {
+            if(error) {
+                return res.status(500).send(error.message);
+            }
+            else if(response.statusCode != 200) {
+                return res.status(response.statusCode).send(body.toString('utf8'));
+            }
+            else {
+                return res.json(JSON.parse(body));
+            }
+        });
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+
+}
 
 exports.createAnimal = async (req, res) => {
     if (!req.access.toLowerCase().includes('c')) {

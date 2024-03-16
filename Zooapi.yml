@@ -632,6 +632,29 @@ paths:
           description: Accès insuffisant
         '404':
           description: Animal inexistant
+  /animals/{animalId}/details:
+    get:
+      tags:
+        - 'Animal Management'
+      summary: Listes les details sur l'animal
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: animalId
+          in: path
+          required: true
+          description: l'ID de l'animal à afficher
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Les details de l'animal.
+        '401':
+          description: Token invalide
+        '403':
+          description: Accès insuffisant
+        '404':
+          description: Animal inexistant
 components:
   securitySchemes:
     bearerAuth:

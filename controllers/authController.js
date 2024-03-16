@@ -1,6 +1,6 @@
 const { User } = require('../model/indexModel');
 const jwt = require('jsonwebtoken');
-const jwtConfig = require('../jwt.config');
+const { jwtConfig } = require('../config');
 const bcrypt = require('bcrypt');
 
 exports.login = async (req, res) => {
@@ -16,7 +16,7 @@ exports.login = async (req, res) => {
         if (await bcrypt.compare(password, user.password)) {
             const token = jwt.sign(
                 { userId: user.id },
-                jwtConfig.jwtSecret,
+                jwtConfig.secret,
                 { expiresIn: '1h' }
             );
 
