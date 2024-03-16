@@ -245,8 +245,6 @@ paths:
                   type: string
                 access:
                   type: string
-              required:
-                - mail
       responses:
         '200':
           description: Utilisateur mis à jour.
