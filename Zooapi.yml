@@ -109,10 +109,10 @@ paths:
             schema:
               type: object
               properties:
-                zoo_name:
+                name:
                   type: string
               required:
-                - zoo_name
+                - name
       responses:
         '200':
           description: Zoo mis à jour.
