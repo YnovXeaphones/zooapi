@@ -35,7 +35,7 @@ Pour lancer la suite de tests unitaires exécutez `npm test`.
 
 Consultez le fichier `zooapi.yml` pour la spécification OpenAPI complète.
 
-Après avoir lancé le serveur, pour avoir accès au swagger [utilisez ce lien](http://localhost:3000/api/v1/documentation).
+Après avoir lancé le serveur, pour avoir accès au swagger [utilisez ce lien](http://localhost:3000/api/documentation).
 
 ---
 
