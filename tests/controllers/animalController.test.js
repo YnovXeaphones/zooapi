@@ -1,105 +1,134 @@
 const request = require('supertest');
 const app = require('../../app');
-const animalService = require('../../services/animalService');
 
-const animals = [
-  { id: 1, name: "Lion", specie: "Panthera leo", diet: "Carnivore", cageId: 1 },
-  { id: 2, name: "Giraffe", specie: "Giraffa camelopardalis", diet: "Herbivore", cageId: 2 },
-];
+let authToken = '';
+let cageId = '';
+let animalId = '';
 
-jest.mock('../../services/animalService');
+beforeAll(async () => {
+  // Create a zoo
+  const createZooResponse = await request(app)
+    .post('/api/v1/createZoo')
+    .set('Content-type', 'application/json')
+    .send({
+      zoo_name: "testzoo",
+      firstName: "testuser",
+      lastName: "testuser",
+      mail: "test@test.fr",
+      password: "password"
+    });
+
+    zooId = createZooResponse.body.zoo_id;
+
+  // Perform login to obtain token
+  const loginResponse = await request(app)
+    .post('/api/v1/login')
+    .send({ 
+      mail: 'test@test.fr', 
+      password: 'password', 
+      zooId: zooId 
+    });
+
+  authToken = loginResponse.body.token;
+
+  // Create a cage
+  const createCageResponse = await request(app)
+    .post('/api/v1/cages')
+    .set('Authorization', `Bearer ${authToken}`)
+    .send({ name: "Cage 1", zooId: zooId });
+
+  cageId = createCageResponse.body.id;
+});
 
 describe('Animal Controller', () => {
+  it('should create a new animal and return 201', async () => {
+    const newAnimal = { name: "Lion", specie: "Panthera leo", diet: "Carnivore", cageId: cageId };
+
+    const response = await request(app)
+      .post('/api/v1/animals')
+      .set('Authorization', `Bearer ${authToken}`)
+      .send(newAnimal);
+
+    expect(response.statusCode).toBe(201);
+  });
 
   it('should return all animals', async () => {
-    animalService.getAllAnimals.mockResolvedValue(animals);
-    animalService.getAnimalById.mockImplementation(id => Promise.resolve(animals.find(animal => animal.id === id)));
-
-    const response = await request(app).get('/api/v1/animals');
-
-    expect(response.statusCode).toBe(200);
-    expect(response.body).toEqual(animals);
-  });
-
-  /*it('should return all animals', async () => {
-    const response = await request(app).get('/api/v1/animals');
+    const response = await request(app)
+    .get('/api/v1/animals')
+    .set('Authorization', `Bearer ${authToken}`);
 
     expect(response.statusCode).toBe(200);
-    expect(response.body).toEqual(animals);
-  });
+    expect(response.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          name: 'Lion',
+          specie: 'Panthera leo',
+          diet: 'Carnivore',
+          cageId: cageId,
+        }),
+      ])
+    );
 
-//---------------------------------------
+    animalId = response.body[0].id;
+  });
 
   it('should return a single animal when given a valid ID', async () => {
-    animalService.getAnimalById.mockResolvedValue(animals[0]);
-
-    const response = await request(app).get('/api/v1/animals/1');
+    const response = await request(app)
+    .get('/api/v1/animals/' + animalId)
+    .set('Authorization', `Bearer ${authToken}`);
 
     expect(response.statusCode).toBe(200);
-    expect(response.body).toEqual(animals[0]);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        name: 'Lion',
+        specie: 'Panthera leo',
+        diet: 'Carnivore',
+        cageId: cageId,
+      })
+    );
   });
 
-//---------------------------------------
-
   it('should return a 404 when animal is not found', async () => {
-    animalService.getAnimalById.mockResolvedValue(null);
-
-    const response = await request(app).get('/api/v1/animals/999');
+    const response = await request(app)
+    .get('/api/v1/animals/999')
+    .set('Authorization', `Bearer ${authToken}`);
 
     expect(response.statusCode).toBe(404);
     expect(response.body).toEqual({});
   });
 
-//---------------------------------------
-
-  it('should create a new animal and return 201', async () => {
-    const newAnimal = { name: "Tiger", specie: "Panthera tigris", diet: "Carnivore", cageId: 3 };
-    animalService.createAnimal.mockResolvedValue({ id: 3, ...newAnimal });
-
-    const response = await request(app)
-      .post('/api/v1/animals')
-      .send(newAnimal);
-
-    expect(response.statusCode).toBe(201);
-    expect(response.body).toMatchObject(newAnimal);
-  });
-
-//---------------------------------------
-
   it('should update an existing animal and return 200', async () => {
-    const updatedAnimal = { id: 1, name: "Updated Lion", specie: "Panthera leo", diet: "Carnivore", cageId: 1 };
-    animalService.updateAnimalById.mockResolvedValue(updatedAnimal);
+    const updatedAnimal = { name: "Updated Lion" };
 
     const response = await request(app)
-      .put('/api/v1/animals/1')
+      .put('/api/v1/animals/' + animalId)
+      .set('Authorization', `Bearer ${authToken}`)
       .send(updatedAnimal);
 
     expect(response.statusCode).toBe(200);
-    expect(response.body).toMatchObject(updatedAnimal);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        name: 'Updated Lion',
+        specie: 'Panthera leo',
+        diet: 'Carnivore',
+        cageId: cageId,
+      })
+    );
   });
-
-//---------------------------------------
 
   it('should delete an existing animal and return 200', async () => {
-    const animalIdToDelete = 1;
-    animalService.deleteAnimalById.mockResolvedValue(true);
-
     const response = await request(app)
-      .delete(`/api/v1/animals/${animalIdToDelete}`);
+      .delete('/api/v1/animals/' + animalId)
+      .set('Authorization', `Bearer ${authToken}`);
 
     expect(response.statusCode).toBe(200);
-    expect(response.text).toContain('Animal deleted');
   });
 
-//---------------------------------------
-
   it('should return 404 when trying to delete an animal that does not exist', async () => {
-    animalService.deleteAnimalById.mockResolvedValue(false);
-
     const response = await request(app)
-      .delete('/api/v1/animals/999');
+      .delete('/api/v1/animals/999')
+      .set('Authorization', `Bearer ${authToken}`);
 
     expect(response.statusCode).toBe(404);
-    expect(response.text).toContain('Animal not found');
-  });*/
+  });
 });
