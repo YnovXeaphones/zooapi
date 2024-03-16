@@ -22,13 +22,17 @@ ZooAPI est une interface de programmation applicative (API) conçue pour facilit
 
 Pour installer et démarrer l'API :
 
-1. Cloner le dépôt avec `git clone [url_du_dépôt]`.
+1. Cloner le dépôt avec `git clone https://github.com/Xeaphones/zooapi.git`.
 2. Installer les dépendances avec `npm install`.
 3. Démarrer le serveur avec `npm start`.
-4. Vous pouvez également lancer la suite de tests unitaires avec `npm test`
+4. Lancer la suite de tests unitaires avec `npm test`
 
 ## Documentation API
 
 Consultez le fichier `zooapi.yml` pour la spécification OpenAPI complète.
 Après avoir lancé le serveur, pour avoir accès au swagger [utilisez ce lien](http://localhost:3000/api/v1/documentation).
+
+---
+
+By Nolan & Yohan
 
