@@ -8,7 +8,7 @@ exports.getAllAnimals = () => {
     return animals;
 };
 
-exports.getanimAlById = (id) => {
+exports.getAnimalById = (id) => {
     return animals.find(animal => animal.id === id);
 };
 
