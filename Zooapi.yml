@@ -489,7 +489,7 @@ paths:
                   type: string
                 diet:
                   type: string
-                cage_id:
+                cageId:
                   type: integer
       responses:
         '201':
@@ -522,7 +522,7 @@ paths:
                       type: string
                     diet:
                       type: string
-                    cage_id:
+                    cageId:
                       type: integer
         '401':
           description: Token invalide
@@ -556,7 +556,7 @@ paths:
                     type: string
                   diet:
                     type: string
-                  cage_id:
+                  cageId:
                     type: integer
         '401':
           description: Token invalide
@@ -590,7 +590,7 @@ paths:
                   type: string
                 diet:
                   type: string
-                cage_id:
+                cageId:
                   type: integer
       responses:
         '200':
