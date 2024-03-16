@@ -20,6 +20,7 @@ exports.login = async (req, res) => {
                 { expiresIn: '1h' }
             );
 
+            res.cookie('token', token, { httpOnly: true });
             res.status(200).json({ token: token });
         } else {
             res.status(401).send({ message: 'Invalid mail or password' });

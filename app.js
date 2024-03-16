@@ -21,16 +21,15 @@ app.use(express.json());
 
 app.use(
     openApiValidator.middleware({
-        apiSpec: path.join(__dirname, 'Zooapi.yml'),
+        apiSpec: apiSpec,
     }),
 );
 
 // Routes configuration
+app.use(`/api/documentation`, swaggerUi.serve, swaggerUi.setup(openApiDocumentation));
 
 // v1
-const v1prefix = "/api/v1"
-
-app.use(`${v1prefix}/documentation`, swaggerUi.serve, swaggerUi.setup(openApiDocumentation));
+const v1prefix = "/api/v1";
 
 app.use(`${v1prefix}/login`, authRouter);
 app.use(`${v1prefix}/users`, userRouter);

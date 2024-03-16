@@ -10,7 +10,7 @@ const verifyToken = async (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, jwtConfig.jwtSecret);
-        const user = await userService.getUserById(decoded.userId);
+        const user = await userService.getUserByPK(decoded.userId);
         if (!user) {
             return res.status(401).send({ message: 'Invalid Token' });
         }

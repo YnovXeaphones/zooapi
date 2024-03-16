@@ -1,8 +1,12 @@
 const userService = require('../services/userService');
 
 exports.getAllUsers = async (req, res) => {
+    if (!req.access.toLowerCase().includes('r') || !req.access.toLowerCase().includes('a')) {
+        return res.status(403).send('Unauthorized');
+    }
+    const zooId = req.zooId;
     try {
-        const users = await userService.getAllUsers();
+        const users = await userService.getAllUsers(zooId);
         res.json(users);
     } catch (error) {
         res.status(500).send(error.message);
@@ -10,9 +14,13 @@ exports.getAllUsers = async (req, res) => {
 };
 
 exports.getUserById = async (req, res) => {
+    if (!req.access.toLowerCase().includes('r') || !req.access.toLowerCase().includes('a')) {
+        return res.status(403).send('Unauthorized');
+    }
     const id = parseInt(req.params.id);
+    const zooId = req.zooId;
     try {
-        const user = await userService.getUserById(id);
+        const user = await userService.getUserById(id, zooId);
         if (user) {
             res.json(user);
         } else {
@@ -24,7 +32,11 @@ exports.getUserById = async (req, res) => {
 };
 
 exports.createUser = async (req, res) => {
-    const { firstName, lastName, mail, password, access, zooId } = req.body;
+    if (!req.access.toLowerCase().includes('c') || !req.access.toLowerCase().includes('a')) {
+        return res.status(403).send('Unauthorized');
+    }
+    const { firstName, lastName, mail, password, access } = req.body;
+    const zooId = req.zooId;
     try {
         const user = await userService.createUser(firstName, lastName, mail, password, access, zooId);
         res.status(201).json(user);
@@ -34,10 +46,17 @@ exports.createUser = async (req, res) => {
 };
 
 exports.updateUserById = async (req, res) => {
+    if (!req.access.toLowerCase().includes('u') || !req.access.toLowerCase().includes('a')) {
+        return res.status(403).send('Unauthorized');
+    }
     const id = parseInt(req.params.id);
-    const { firstName, lastName, mail, password, access, zooId } = req.body;
+    const { firstName, lastName, mail, access } = req.body;
+    if (id === req.userId && access && access !== req.access) {
+        return res.status(403).send('You cannot change your own access');
+    }
+    const zooId = req.zooId;
     try {
-        const updatedUser = await userService.updateUserById(id, firstName, lastName, mail, password, access, zooId);
+        const updatedUser = await userService.updateUserById(id, zooId, firstName, lastName, mail, access);
         if (updatedUser) {
             res.json(updatedUser);
         } else {
@@ -49,9 +68,19 @@ exports.updateUserById = async (req, res) => {
 };
 
 exports.deleteUserById = async (req, res) => {
+    if (!req.access.toLowerCase().includes('d') || !req.access.toLowerCase().includes('a')) {
+        return res.status(403).send('Unauthorized');
+    }
+    
     const id = parseInt(req.params.id);
+    const zooId = req.zooId;
+
+    if (id === req.userId) {
+        return res.status(403).send('You cannot delete yourself');
+    }
+
     try {
-        const success = await userService.deleteUserById(id);
+        const success = await userService.deleteUserById(id, zooId);
         if (success) {
             res.status(200).send('User deleted');
         } else {
