@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const dbConfig = require('../db.config')
+const { dbConfig } = require('../config')
 
 const instance = new Sequelize({
     dialect: dbConfig.dialect,
