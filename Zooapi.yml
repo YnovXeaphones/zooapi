@@ -338,7 +338,7 @@ paths:
           description: Token invalide
         '403':
           description: Accès insuffisant
-  /cage/{cageId}:
+  /cages/{cageId}:
     get:
       tags:
         - 'Cage Management'

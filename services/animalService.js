@@ -36,3 +36,9 @@ exports.deleteAnimalById = (id) => {
     }
     return false;
 };
+
+exports.getAnimalsByCageId = (cageId) => {
+    return animals.filter(
+        animal => animal.cageId === cageId
+    );
+};
