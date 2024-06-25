@@ -1,5 +1,7 @@
 # ZooAPI
 
+Ynov Toulouse B3
+
 ## Description
 
 ZooAPI est une interface de programmation applicative (API) conçue pour faciliter la gestion à distance de multiples zoos. Avec ZooAPI, les propriétaires et les gestionnaires de zoos peuvent facilement surveiller et gérer leurs animaux, leurs enclos, et le personnel à travers une plateforme centralisée.
